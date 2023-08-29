@@ -12,12 +12,10 @@ app.get('/test', (req, res) => {
 })
 
 app.get('/data', async (req, res) => {
-  const date = req
+  const {date} = req.query
   console.log("req-------->",date);
   try {
-    const response = await axios.get(`https://news.sina.com.cn/head/news20230829am.shtml`);
-    // const response = await axios.get(`https://news.sina.com.cn/head/news${date}am.shtml`);
-    console.log("V1Json--------");
+    const response = await axios.get(`https://news.sina.com.cn/head/news${date}am.shtml`);
     res.send(response.data);
   } catch (error) {
     console.error(error);
