@@ -12,8 +12,11 @@ app.get('/test', (req, res) => {
 })
 
 app.get('/data', async (req, res) => {
+  const date = req
+  console.log("req-------->",date);
   try {
-    const response = await axios.get('https://mfejs.sina.cn/V1Json.js');
+    const response = await axios.get(`https://news.sina.com.cn/head/news20230829am.shtml`);
+    // const response = await axios.get(`https://news.sina.com.cn/head/news${date}am.shtml`);
     console.log("V1Json--------");
     res.send(response.data);
   } catch (error) {

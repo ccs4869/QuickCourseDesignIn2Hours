@@ -1,10 +1,24 @@
 import { createApp } from 'vue'
-import './style.css'
 import App from './App.vue'
-
+import router from './router'
+import './style.css'
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
 import http from './api'
 
-// axios.get('http://localhost:3000/data').then(res=>console.log("res---------->",res))
-http.get('/data').then(res=>console.log("res---------->",res))
+import ci from 'cheerio'
 
-createApp(App).mount('#app')
+const app = createApp(App)
+
+app.use(router)
+app.use(ElementPlus)
+
+// axios.get('http://localhost:3000/data').then(res=>console.log("res---------->",res))
+
+http.get('/data').then(res => { 
+const $ = ci.load(res.data)
+  
+  console.log("res---------->",$('.uni-blk-list02.list-a.list-0427 li'))
+})
+
+app.mount('#app')
