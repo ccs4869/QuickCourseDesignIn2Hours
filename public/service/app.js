@@ -29,6 +29,12 @@ app.get('/acticle', async (req, res) => {
   res.send(response.data);
 })
 
+app.get('/detail', async (req, res) => { 
+  const { url } = req.query
+  const response = await axios.get(url);
+  res.send(response.data);
+})
+
 app.listen(3333, () => { 
   console.log("begin----------------------------")
 })

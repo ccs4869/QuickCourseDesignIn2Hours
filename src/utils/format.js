@@ -1,9 +1,11 @@
 import ci from 'cheerio'
 
 
-export function formatCiText(str, match) { 
+export function formatCiText(str, match,tag) { 
   console.log("处理的数据---------->",Array.from(ci.load(str)(match)));
-  return Array.from(ci.load(str)(match)).map(item=>ci.load(item)('a').text())
+  return Array.from(ci.load(str)(match)).map(item => {
+    return tag ? ci.load(item)(tag).text() : ci.load(item).text()
+  })
 }
 export function formatCiNode(str, match) { 
   console.log("处理的数据---------->",Array.from(ci.load(str)(match)));
