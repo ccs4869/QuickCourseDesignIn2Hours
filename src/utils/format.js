@@ -1,8 +1,19 @@
 import ci from 'cheerio'
 
 
-export function formatCi(str,match){ 
+export function formatCiText(str, match) { 
+  console.log("处理的数据---------->",Array.from(ci.load(str)(match)));
   return Array.from(ci.load(str)(match)).map(item=>ci.load(item)('a').text())
+}
+export function formatCiNode(str, match) { 
+  console.log("处理的数据---------->",Array.from(ci.load(str)(match)));
+  return Array.from(ci.load(str)(match)).map(item => { 
+    
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(ci.load(item)('dt').html(), 'text/html');
+    const domElement = doc.body.firstChild;
+    return domElement
+  })
 }
 
 export function formatDate(GMT){ 

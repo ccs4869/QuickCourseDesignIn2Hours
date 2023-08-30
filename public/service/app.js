@@ -23,6 +23,12 @@ app.get('/data', async (req, res) => {
   }
 });
 
+app.get('/acticle', async (req, res) => { 
+  const {date} = req.query
+  const response = await axios.get(`http://gov.sina.com.cn/`);
+  res.send(response.data);
+})
+
 app.listen(3333, () => { 
   console.log("begin----------------------------")
 })
