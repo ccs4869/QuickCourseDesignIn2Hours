@@ -24,15 +24,8 @@
       :key="index"
       @change="getActicleDetail(item.href)"
     >
-      <el-collapse-item :title="item.text" :name="index">
-        <div>
-          Consistent with real life: in line with the process and logic of real
-          life, and comply with languages and habits that the users are used to;
-        </div>
-        <div>
-          Consistent within interface: all elements should be consistent, such
-          as: design style, icons and texts, position of elements, etc.
-        </div>
+      <el-collapse-item :title="item.title" :name="index">
+        <div @click="getComments(item.detail.href[0].href)">查看评论</div>
       </el-collapse-item>
     </el-collapse>
   </el-card>
@@ -45,6 +38,7 @@
 <script setup>
 import { ref, getCurrentInstance, onMounted, reactive, watchEffect } from "vue"
 import { formatCiText, formatDate, formatCiNode } from "../../utils/format"
+import $ from "../../utils/jquery"
 
 onMounted(() => {
   getActicle()
@@ -83,7 +77,6 @@ const getHots = (date) => {
       }
     })
     .then(({ data: res }) => {
-      console.log(formatCiText(res, ".uni-blk-list02.list-a.list-0427 li", "a"))
       hotList.lists = formatCiText(
         res,
         ".uni-blk-list02.list-a.list-0427 li",
@@ -92,7 +85,7 @@ const getHots = (date) => {
     })
 }
 
-const acticleList = ref([])
+const acticleList = reactive([])
 const getActicle = (date) => {
   $http
     .get("/acticle", {
@@ -104,16 +97,22 @@ const getActicle = (date) => {
       ({ data: res }) => {
         const nodes = formatCiNode(
           res,
-          ".general .china>.china_ul .direction dl dt"
+          ".general .china>.china_ul .direction dl dt",
+          "dt"
         )
-        nodes.forEach((item) => console.log(item.innerText))
-        acticleList.value = nodes.map(({ href, innerText: text }) => {
-          return {
-            href,
-            text
-          }
+        nodes.forEach((item) => {
+          acticleList.push({
+            href: item.href,
+            title: item.innerText,
+            detail: {}
+          })
         })
-        console.log(acticleList.value)
+        // acticleList.value = nodes.map(({ href, innerText: text }) => {
+        //   return {
+        //     href,
+        //     title: text
+        //   }
+        // })
       }
 
       // console.log(formatCi(res, ".uni-blk-list02.list-a.list-0427 li"))
@@ -126,13 +125,60 @@ const getActicleDetail = (url) => {
       params: { url }
     })
     .then(({ data: res }) => {
-      console.log(
-        formatCiText(
+      const detail = formatCiText(
+        res,
+        ".article-content .article-content-left .article p",
+        ""
+      )
+
+      const author = formatCiText(
+        res,
+        ".top-bar-wrap .top-bar .top-bar-inner .date-source .date",
+        ""
+      )
+
+      const comments = {
+        href: formatCiNode(
           res,
-          ".article-content .article-content-left .article p",
+          ".top-bar-wrap .top-bar .top-bar-inner .page-tools .tool-cmt a",
+          ""
+        ),
+        length: formatCiText(
+          res,
+          ".top-bar-wrap .top-bar .top-bar-inner .page-tools .tool-cmt a .num",
           ""
         )
-      )
+      }
+
+      acticleList[activeName.value].detail = comments
+    })
+}
+function formatUrlParams(url) {
+  const params = {}
+  const queryString = url.split("?")[1]
+  if (queryString) {
+    const paramPairs = queryString.split("&")
+    paramPairs.forEach((pair) => {
+      const [key, value] = pair.split("=")
+      params[key] = decodeURIComponent(value)
+    })
+  }
+  return params
+}
+
+const getComments = (url) => {
+  // Format url query
+  const { newsid } = formatUrlParams(url)
+  $http
+    .get("/comments", {
+      params: {
+        format: "json",
+        channel: "gn",
+        newsid
+      }
+    })
+    .then(({ data: res }) => {
+      console.log(res)
     })
 }
 </script>

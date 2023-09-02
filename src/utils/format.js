@@ -2,17 +2,16 @@ import ci from 'cheerio'
 
 
 export function formatCiText(str, match,tag) { 
-  console.log("处理的数据---------->",Array.from(ci.load(str)(match)));
   return Array.from(ci.load(str)(match)).map(item => {
     return tag ? ci.load(item)(tag).text() : ci.load(item).text()
   })
 }
-export function formatCiNode(str, match) { 
-  console.log("处理的数据---------->",Array.from(ci.load(str)(match)));
+export function formatCiNode(str, match,tag) { 
   return Array.from(ci.load(str)(match)).map(item => { 
     
     const parser = new DOMParser();
-    const doc = parser.parseFromString(ci.load(item)('dt').html(), 'text/html');
+    const _html = tag ? ci.load(item)(tag).html() : ci.load(item).html()
+    const doc = parser.parseFromString(_html, 'text/html');
     const domElement = doc.body.firstChild;
     return domElement
   })
