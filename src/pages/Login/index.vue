@@ -1,25 +1,46 @@
 <template>
   <div class="login-container">
-    <el-card shadow="always" class="login-card">
+    <el-card shadow="always" class="login-card" v-if="isLogin">
+      <h1 style="text-align: center">Login</h1>
       <el-form
         :label-position="labelPosition"
         label-width="100px"
-        :model="formLabelAlign"
+        :model="loginForm"
         style="max-width: 460px"
       >
-        <el-form-item label="Name">
-          <el-input v-model="formLabelAlign.name" />
+        <el-form-item label="username">
+          <el-input v-model="loginForm.username" />
         </el-form-item>
         <el-form-item label="password">
-          <el-input v-model="formLabelAlign.region" />
-        </el-form-item>
-        <el-form-item label="Activity form">
-          <el-input v-model="formLabelAlign.type" />
+          <el-input v-model="loginForm.password" />
         </el-form-item>
       </el-form>
       <div class="bottom-button">
-        <el-button>注册</el-button>
-        <el-button @click="toHome">登录</el-button>
+        <el-button @click="toRegister">没有账号，去注册</el-button>
+        <el-button @click="toHome">确认登录</el-button>
+      </div>
+    </el-card>
+    <el-card shadow="always" class="login-card" v-else>
+      <h1 style="text-align: center">Register</h1>
+      <el-form
+        :label-position="labelPosition"
+        label-width="100px"
+        :model="registerForm"
+        style="max-width: 460px"
+      >
+        <el-form-item label="username">
+          <el-input v-model="registerForm.username" />
+        </el-form-item>
+        <el-form-item label="password">
+          <el-input v-model="registerForm.password" />
+        </el-form-item>
+        <el-form-item label="confirm pwd">
+          <el-input v-model="registerForm.verfity" />
+        </el-form-item>
+      </el-form>
+      <div class="bottom-button">
+        <el-button @click="toLogin">已有账号，去登陆</el-button>
+        <el-button @click="toHome">确认注册</el-button>
       </div>
     </el-card>
   </div>
@@ -31,14 +52,27 @@ import { useRouter } from "vue-router"
 const router = useRouter()
 const labelPosition = ref("right")
 
-const formLabelAlign = reactive({
-  name: "",
-  region: "",
-  type: ""
+const isLogin = ref(true)
+const loginForm = reactive({
+  username: "",
+  password: ""
+})
+const registerForm = reactive({
+  username: "",
+  password: "",
+  verfity: ""
 })
 
 const toHome = () => {
   router.push("/home")
+}
+
+const toRegister = () => {
+  isLogin.value = false
+}
+
+const toLogin = () => {
+  isLogin.value = true
 }
 </script>
 
@@ -58,7 +92,8 @@ const toHome = () => {
 }
 
 .el-form {
-  margin: 100px auto;
+  margin: 60px auto;
+  /* margin-top: 60px; */
 }
 
 .bottom-button {

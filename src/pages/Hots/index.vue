@@ -1,70 +1,35 @@
 <template>
-  <!-- <div class="container">
-    <el-menu
-      default-active="2"
-      class="elmenu"
-      @open="handleOpen"
-      @close="handleClose"
+  <el-card class="hot">
+    <header
+      style="display: flex; align-items: center; justify-content: space-between"
     >
-      <el-menu-item index="1">
-        <el-icon><icon-menu /></el-icon>
-        <span>今日热点</span>
-      </el-menu-item>
-      <el-menu-item index="2">
-        <el-icon><document /></el-icon>
-        <span>往日话题</span>
-      </el-menu-item>
-      <el-menu-item index="3">
-        <el-icon><setting /></el-icon>
-        <span>舆情分析</span>
-      </el-menu-item>
-    </el-menu> -->
-  <el-card class="elcard">
-    <header style="margin-bottom: 20px">
-      <!-- <img
-          src="https://i2.sinaimg.cn/dy/deco/2012/0613/yocc20120613img01/news_logo.png"
-          alt=""
-        /> -->
+      <div class="datepicker">
+        <el-date-picker
+          v-model="GMT"
+          type="date"
+          placeholder="Pick a day"
+          size="default"
+          format="YYYY-MM-DD"
+          @change="getHots(formatDate(GMT))"
+        />
+        <code style="margin-left: 40px">热点话题</code>
+      </div>
       <img
-        style="background: #444"
-        src="http://sjs.sinajs.cn/products/news/items/government/index/v1/images/sina_logo.png"
+        src="https://i2.sinaimg.cn/dy/deco/2012/0613/yocc20120613img01/news_logo.png"
         alt=""
+        style="margin-right: 100px"
       />
     </header>
-    <el-collapse
-      v-model="activeName"
-      accordion
-      v-for="(item, index) in acticleList"
-      :key="index"
-      @change="getActicleDetail(item.href)"
-    >
-      <el-collapse-item :title="item.title" :name="index">
-        <div @click="getComments(item.detail.href[0].href)">查看评论</div>
-      </el-collapse-item>
-    </el-collapse>
-  </el-card>
-  <!-- </div> -->
-
-  <!-- <el-card class="hot">
-    <el-date-picker
-      v-model="GMT"
-      type="date"
-      placeholder="Pick a day"
-      size="default"
-      format="YYYY-MM-DD"
-      @change="getHots(formatDate(GMT))"
-    />
-    <code style="margin-left: 40px">热点话题</code>
     <ul>
       <li v-for="(item, index) in hotList.lists" :key="index">
         {{ item }}
       </li>
     </ul>
-  </el-card> -->
+  </el-card>
 
-  <!-- <a v-for="(item, idx) in acticleList" :key="idx" :href="item">
+  <a v-for="(item, idx) in acticleList" :key="idx" :href="item">
     {{ item.innerHTML }}
-  </a> -->
+  </a>
 </template>
 
 <script setup>
@@ -215,9 +180,8 @@ const getComments = (url) => {
 </script>
 <style scoped>
 .hot {
-  width: 500px;
+  width: 100%;
   border: 10px;
-  margin-top: 20px;
 }
 
 .el-date-picker {
